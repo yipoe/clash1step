@@ -88,7 +88,7 @@ chmod +x ./install
 
 cd /etc/smartdns/
 
-wget https://raw.githubusercontent.com/yuanlam/clash1step/master/smartdns.conf -O smartdns.conf
+wget https://raw.githubusercontent.com/yuanlam/clash1step/test/smartdns.conf -O smartdns.conf
 
 systemctl enable smartdns
 
