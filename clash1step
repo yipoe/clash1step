@@ -107,7 +107,7 @@ EOF
 
 cd /etc/unbound/
 
-wget https://raw.githubusercontent.com/yuanlam/clash1step/master/unbound.conf -O unbound.conf
+wget https://raw.githubusercontent.com/yuanlam/clash1step/test/unbound.conf -O unbound.conf
 
 # 下载证书
 wget ftp://FTP.INTERNIC.NET/domain/named.cache -O/etc/unbound/root.hints
