@@ -30,7 +30,9 @@ done
 
 dt_system_dep(){
 
-yes|apt -y install sudo supervisor iptables-persistent net-tools curl gzip unzip htop git make
+yes|apt update && apt dist-upgrade
+
+apt -y install sudo supervisor net-tools curl gzip unzip htop git make iptables-persistent
 
 usermod -aG sudo $user
 
