@@ -186,8 +186,8 @@ iface $eth_n inet static
   netmask 255.255.255.0
   gateway $gate_ip
   dns-nameservers $dns
-  mtu $mtu
-  mss $mss
+  mtu 1492
+  mss 1452
 EOF
 
 echo "14******************************************************************"
