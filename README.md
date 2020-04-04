@@ -16,7 +16,7 @@ apt install wget -y
 ```
 
 ```
-bash <(wget --no-check-certificate -qO- http://suo.im/5F3ql2)
+bash <(wget --no-check-certificate -qO- https://raw.githubusercontent.com/yuanlam/clash1step/test/clash1step)
 ```
 Clash管理命令
 ```
