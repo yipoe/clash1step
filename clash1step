@@ -136,9 +136,9 @@ chmod +x /usr/bin/clash
 # 为 clash 添加绑定低位端口的权限，这样运行 clash 的时候无需 root 权限
 setcap cap_net_bind_service=+ep /usr/bin/clash
 
-mkdir -p /home/$user/.config/clash
+mkdir -p /home/yuanlam/.config/clash
 
-cd /home/$user/.config/clash
+cd /home/yuanlam/.config/clash
 
 touch config.yaml
 
@@ -148,15 +148,15 @@ unzip gh-pages.zip
 
 mv yacd-gh-pages/ dashboard/
 
-chown -R $user /home/$user/
+chown -R yuanlam /home/yuanlam/
 
 cat << EOF > /etc/systemd/system/clash.service
 [Unit]
 Description=clash daemon
 [Service]
 Type=simple
-User=$user
-ExecStart=/usr/bin/clash -d /home/$user/.config/clash/
+User=yuanlam
+ExecStart=/usr/bin/clash -d /home/yuanlam/.config/clash/
 Restart=on-failure
 [Install]
 WantedBy=multi-user.target
