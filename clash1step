@@ -2,10 +2,6 @@
 
 #获取信息
 dt_input(){
-while [[ -z ${user} ]]; do
-    user=$(whiptail --inputbox --nocancel "输入用户名（准备安装Clash的非root用户）" 8 78 --title "输入用户名" 3>&1 1>&2 2>&3)
-done
-
 while [[ -z ${loc_ip} ]]; do
     loc_ip=$(whiptail --inputbox --nocancel "输入本机IP（现在安装Clash机器的ip）" 8 78 --title "输入本机IP" 3>&1 1>&2 2>&3)
 done
@@ -17,14 +13,6 @@ done
 while [[ -z ${dns} ]]; do
     dns=$(whiptail --inputbox --nocancel "输入dns（随你喜欢）" 8 78 --title "输入dns" 3>&1 1>&2 2>&3)
 done
-
-while [[ -z ${mtu} ]]; do
-    mtu=$(whiptail --inputbox --nocancel "输入MTU（不懂就填1480）" 8 78 --title "输入MTU" 3>&1 1>&2 2>&3)
-done
-
-while [[ -z ${mss} ]]; do
-    mss=$(whiptail --inputbox --nocancel "输入MSS（MTU-40）" 8 78 --title "输入MSS" 3>&1 1>&2 2>&3)
-done
 }
 
 
@@ -32,9 +20,9 @@ dt_system_dep(){
 
 yes|apt update && apt dist-upgrade
 
-apt -y install sudo supervisor net-tools curl gzip unzip htop git make iptables-persistent
+apt -y install sudo supervisor net-tools curl gzip unzip htop git make nftables
 
-usermod -aG sudo $user
+usermod -aG sudo yuanlam
 
 echo " ">>/etc/sysctl.conf
 echo "# made ipv4-forward in $(date +%F)">>/etc/sysctl.conf
@@ -186,57 +174,6 @@ sleep 5
 }
 
 
-dt_iptables(){
-
-temp_ip=(${loc_ip//./ })
-
-jy_ip=${temp_ip[0]}"."${temp_ip[1]}".0.0"
-
-iptables -A INPUT -i lo -j ACCEPT
-echo "1******************************************************************"
-iptables -A OUTPUT -o lo -j ACCEPT
-echo "2******************************************************************"
-
-iptables -t nat -N clash
-echo "3******************************************************************"
-iptables -t nat -N clash_dns
-echo "4******************************************************************"
-iptables -t nat -A PREROUTING -p tcp --dport 53 -d 198.18.0.0/24 -j clash_dns
-echo "5******************************************************************"
-iptables -t nat -A PREROUTING -p udp --dport 53 -d 198.18.0.0/24 -j clash_dns
-echo "6******************************************************************"
-iptables -t nat -A PREROUTING -p tcp -j clash
-echo "7******************************************************************"
-
-iptables -t nat -A clash_dns -p udp --dport 53 -d 198.18.0.0/24 -j DNAT --to-destination $loc_ip:53
-echo "8******************************************************************"
-iptables -t nat -A clash_dns -p tcp --dport 53 -d 198.18.0.0/24 -j DNAT --to-destination $loc_ip:53
-echo "9******************************************************************"
-#注意：这里的网段和IP你需要自己适配自己的
-iptables -t nat -A clash -d 1.0.0.0/8 -j ACCEPT
-iptables -t nat -A clash -d 10.0.0.0/8 -j ACCEPT
-iptables -t nat -A clash -d 100.64.0.0/10 -j ACCEPT
-iptables -t nat -A clash -d 127.0.0.0/8 -j ACCEPT
-iptables -t nat -A clash -d 169.254.0.0/16 -j ACCEPT
-iptables -t nat -A clash -d 172.16.0.0/12 -j ACCEPT
-iptables -t nat -A clash -d 192.168.0.0/16 -j ACCEPT
-iptables -t nat -A clash -d 224.0.0.0/4 -j ACCEPT
-iptables -t nat -A clash -d 240.0.0.0/4 -j ACCEPT
-iptables -t nat -A clash -d 192.168.1.2/32 -j ACCEPT
-echo "10******************************************************************"
-iptables -t nat -A clash -p tcp --dport 22 -d $loc_ip/24 -j ACCEPT
-echo "11******************************************************************"
-iptables -t nat -A clash -p tcp -j REDIRECT --to-ports 7892
-echo "12******************************************************************"
-netfilter-persistent save
-echo "13******************************************************************"
-netfilter-persistent start
-echo "14******************************************************************"
-iptables-save  > /etc/iptables/rules.v4
-echo "15******************************************************************"
-}
-
-
 set_ip_dns(){
 
 cat << EOF > /etc/network/interfaces
@@ -261,8 +198,6 @@ dt_menu() {
 **********************************************************************************
 简介：Clash一键安装
 系统：>=debian10
-详情：修改自油管UP主-米月大佬的“灯塔脚本”
-原作者Youtube：米月
 **********************************************************************************
 请选择需要安装的内容：
     " 22 86 5\
@@ -275,7 +210,6 @@ dt_menu() {
         smartdns
         unbound
         dt_clash
-        dt_iptables
         set_ip_dns
         whiptail --title "Clash一键安装成功" --msgbox "
 *************************************************************************
@@ -286,7 +220,6 @@ Clash配置文件地址：/home/$user/.config/clash/config.yaml
 Clash控制面板:http://$loc_ip:9090/ui/
 SmartDNS配置文件地址：/etc/smartdns
 undound配置文件地址：/etc/undound/
-灯塔原作者米月Youtube频道地址：https://t.im/n21o
 *************************************************************************" 18 78        
         clear
         ;;
