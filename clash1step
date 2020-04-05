@@ -18,7 +18,7 @@ done
 
 dt_system_dep(){
 
-yes|apt update && apt dist-upgrade
+yes|apt update && apt -y dist-upgrade
 
 apt -y install sudo supervisor net-tools curl gzip unzip htop git make nftables
 
