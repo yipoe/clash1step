@@ -16,7 +16,7 @@ done
 }
 
 
-dt_system_dep(){
+system_dep(){
 
 yes|apt update && apt -y dist-upgrade
 
@@ -124,7 +124,7 @@ cp *unbound.conf /etc/unbound/unbound.conf.d/
 }
 
 
-dt_clash(){
+clash(){
 
 
 wget -O /opt/clash.gz $CLS
@@ -174,7 +174,7 @@ sleep 5
 }
 
 
-set_ip_dns(){
+ip_dns(){
 
 cat << EOF > /etc/network/interfaces
 source /etc/network/interfaces.d/*
@@ -205,12 +205,12 @@ dt_menu() {
         "4" " 退出" 3>&1 1>&2 2>&3)
     case $Mainmenu in
         1)
-        dt_input
-        dt_system_dep
+        input
+        system_dep
         smartdns
         unbound
-        dt_clash
-        set_ip_dns
+        clash
+        ip_dns
         whiptail --title "Clash一键安装成功" --msgbox "
 *************************************************************************
 Clash安装成功，需要科学的设备请参照下面修改。软路由请自行修改。
