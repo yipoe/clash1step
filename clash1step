@@ -9,10 +9,6 @@ done
 while [[ -z ${gate_ip} ]]; do
     gate_ip=$(whiptail --inputbox --nocancel "输入网关IP（输入网关IP（主路由）" 8 78 --title "输入网关IP" 3>&1 1>&2 2>&3)
 done
-
-while [[ -z ${dns} ]]; do
-    dns=$(whiptail --inputbox --nocancel "输入dns（随你喜欢）" 8 78 --title "输入dns" 3>&1 1>&2 2>&3)
-done
 }
 
 
@@ -185,7 +181,7 @@ iface $eth_n inet static
   address $loc_ip
   netmask 255.255.255.0
   gateway $gate_ip
-  dns-nameservers $dns
+  dns-nameservers $gate_ip
   mtu 1492
   mss 1452
 EOF
